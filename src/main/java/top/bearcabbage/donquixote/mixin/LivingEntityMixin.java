@@ -33,24 +33,27 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
 	private void drop(ServerWorld world, DamageSource damageSource, CallbackInfo ci) {
 		// Prevent LivingEntity from dropping items
 		LivingEntity entity = (LivingEntity) (Object) this;
-		if (entity instanceof ServerPlayerEntity player && damageSource.getAttacker() instanceof ServerPlayerEntity attacker && wearWindmill(attacker)) {
+		if (entity instanceof ServerPlayerEntity player && damageSource.getAttacker() instanceof ServerPlayerEntity attacker && wearWindmill(attacker) && player!=attacker) {
 			TrinketsApi.getTrinketComponent(player).ifPresent(trinkets -> trinkets.forEach((slot, stack) -> {
 				if (slot.getId().contains("chest/necklace")) {
 					if (stack.isOf(WINDMILL)) {
 						if (getAmountFilled(stack) > 0) {
-							int ran = (int) world.random.nextFloat()*MAX_FOXES;
+							int ran = (int) (Math.random()*MAX_FOXES);
 							BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
 							BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
 							ItemStack itemStack = builder.removeFirst();
-							ItemStack dropStack = itemStack;
-							if (itemStack.getCount() > ran) {
-								itemStack.setCount(itemStack.getCount() - ran);
-								dropStack.setCount(ran);
-								builder.add(itemStack);
-							} else builder.add(new ItemStack(BONE,1));
-							player.dropItem(dropStack, true, false);
-							stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
-							ci.cancel();
+                            if (itemStack != null) {
+                                ItemStack dropStack = new ItemStack(itemStack.getItem(), itemStack.getCount());
+								if (itemStack.getCount() > ran) {
+									itemStack.setCount(itemStack.getCount() - ran);
+									dropStack.setCount(ran);
+									builder.add(itemStack);
+								} else builder.add(new ItemStack(BONE,1));
+								player.dropItem(dropStack, true, false);
+								stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
+								ci.cancel();
+                            }
+
 						}
 					}
 				}

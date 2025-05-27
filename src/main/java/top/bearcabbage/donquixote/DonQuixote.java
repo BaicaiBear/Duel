@@ -53,6 +53,7 @@ public class DonQuixote implements ModInitializer {
 	}
 
 	public static boolean wearWindmill(ServerPlayerEntity player) {
+		if (player == null) return false;
 		AtomicBoolean re = new AtomicBoolean(false);
 		TrinketsApi.getTrinketComponent(player).ifPresent(trinkets -> trinkets.forEach((slot, stack) -> {
 			if (slot.getId().contains("chest/necklace")) {
@@ -62,8 +63,10 @@ public class DonQuixote implements ModInitializer {
 					ItemStack itemStack = builder.removeFirst();
 					if (itemStack!=null && itemStack.getCount()>0) {
 						re.set(true);
+						if(!itemStack.isOf(BONE)) {
+							builder.add(itemStack);
+						}
 					}
-					builder.add(itemStack);
 					stack.set(DataComponentTypes.BUNDLE_CONTENTS, builder.build());
 				}
 			}
