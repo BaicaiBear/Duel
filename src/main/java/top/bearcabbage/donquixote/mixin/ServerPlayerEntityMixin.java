@@ -8,6 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -21,7 +22,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Se
         super(world, pos, yaw, gameProfile);
     }
 
-    public ServerPlayerEntity oldAttacker;
+    @Unique
+    public ServerPlayerEntity oldAttacker = null;
 
     public ServerPlayerEntity getOldAttacker() {
         return this.oldAttacker;
@@ -41,6 +43,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Se
             this.totalExperience = oldPlayer.totalExperience;
             this.experienceProgress = oldPlayer.experienceProgress;
             this.setScore(oldPlayer.getScore());
+            this.oldAttacker = ((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker();
         }
     }
 }
