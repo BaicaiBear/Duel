@@ -28,6 +28,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.event.GameEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,8 +83,8 @@ public class Duel implements ModInitializer {
 		});
 
 		ServerPlayerEvents.AFTER_RESPAWN.register((player, oldPlayer, alive) -> {
-			if (wearNecklace(oldPlayer) || wearNecklace(((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker())) {
-                ServerPlayerEntity oldAttacker = ((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker();
+			if (wearNecklace(oldPlayer) && wearNecklace(((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker())) {
+				ServerPlayerEntity oldAttacker = ((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker();
 				ServerWorld world = oldAttacker.getServerWorld();
 				player.teleport(world, oldAttacker.getX(), oldAttacker.getY(), oldAttacker.getZ(), oldAttacker.getYaw(), oldAttacker.getPitch());
 				// This part of code is modified from chorus fruit.

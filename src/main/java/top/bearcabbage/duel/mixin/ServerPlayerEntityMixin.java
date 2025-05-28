@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.bearcabbage.duel.ServerPlayerEntityAccessor;
 
 import static top.bearcabbage.duel.Duel.wearNecklace;
+import static top.bearcabbage.duel.Duel.LOGGER;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements ServerPlayerEntityAccessor {
@@ -31,7 +32,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Se
 
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void duel$onDeath(DamageSource damageSource, CallbackInfo ci) {
-        if (damageSource.getAttacker().isPlayer()) this.oldAttacker = (ServerPlayerEntity) damageSource.getAttacker();
+        if (damageSource.getSource()!=null && damageSource.getSource() instanceof ServerPlayerEntity player) this.oldAttacker = player;
         else this.oldAttacker = null;
     }
 
