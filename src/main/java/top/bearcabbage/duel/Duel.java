@@ -39,15 +39,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.mojang.text2speech.Narrator.LOGGER;
-
 
 public class Duel implements ModInitializer {
 	public static final String MOD_ID = "duel";
 
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final DConfig config = new DConfig(FabricLoader.getInstance().getConfigDir().resolve(MOD_ID).resolve("config.json"));
 
