@@ -1,4 +1,4 @@
-package top.bearcabbage.donquixote;
+package top.bearcabbage.duel;
 
 import dev.emi.trinkets.TrinketSlot;
 import dev.emi.trinkets.api.*;
@@ -9,7 +9,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.BundleItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -18,6 +20,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -25,16 +28,16 @@ import net.minecraft.world.event.GameEvent;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import static top.bearcabbage.mirrortree.MirrorTree.FOX_TAIL_ITEM;
-import static top.bearcabbage.donquixote.DonQuixote.LOGGER;
+import static top.bearcabbage.duel.Duel.LOGGER;
+import static top.bearcabbage.duel.Duel.WAGER;
 
-public class WindmillItem extends BundleItem implements Trinket {
-    public WindmillItem(Settings settings) {
+public class NecklaceItem extends BundleItem implements Trinket {
+    public NecklaceItem(Settings settings) {
         super(settings);
         TrinketsApi.registerTrinket(this, this);
     }
+
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
@@ -124,7 +127,7 @@ public class WindmillItem extends BundleItem implements Trinket {
                         ItemStack itemStack3 = slot.insertStack(itemStack2);
                         builder.add(itemStack3);
                     }
-                } else if (itemStack.isOf(FOX_TAIL_ITEM)) {
+                } else if (itemStack.isOf(WAGER)) {
                     int i = builder.add(slot, player);
                     if (i > 0) {
                         this.playInsertSound(player);
@@ -150,7 +153,7 @@ public class WindmillItem extends BundleItem implements Trinket {
                         this.playRemoveOneSound(player);
                         cursorStackReference.set(itemStack);
                     }
-                } else if (otherStack.isOf(FOX_TAIL_ITEM)){
+                } else if (otherStack.isOf(WAGER)){
                     int i = builder.add(otherStack);
                     if (i > 0) {
                         this.playInsertSound(player);

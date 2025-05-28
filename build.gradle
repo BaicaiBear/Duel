@@ -32,7 +32,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"don-quixote" {
+		"duel" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}

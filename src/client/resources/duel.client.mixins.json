@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "top.bearcabbage.donquixote.mixin.client",
+	"package": "top.bearcabbage.duel.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"ExampleClientMixin"

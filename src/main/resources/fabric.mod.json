@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "don-quixote",
+	"id": "duel",
 	"version": "${version}",
-	"name": "Don Quixote",
+	"name": "Duel",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"Bear Cabbage"
@@ -12,20 +12,20 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/don-quixote/icon.png",
+	"icon": "assets/duel/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"top.bearcabbage.donquixote.DonQuixote"
+			"top.bearcabbage.duel.Duel"
 		],
 		"client": [
-			"top.bearcabbage.donquixote.DonQuixoteClient"
+			"top.bearcabbage.duel.DuelClient"
 		]
 	},
 	"mixins": [
-		"don-quixote.mixins.json",
+		"duel.mixins.json",
 		{
-			"config": "don-quixote.client.mixins.json",
+			"config": "duel.client.mixins.json",
 			"environment": "client"
 		}
 	],

@@ -1,4 +1,4 @@
-package top.bearcabbage.donquixote.mixin;
+package top.bearcabbage.duel.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.damage.DamageSource;
@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import top.bearcabbage.donquixote.ServerPlayerEntityAccessor;
+import top.bearcabbage.duel.ServerPlayerEntityAccessor;
 
-import static top.bearcabbage.donquixote.DonQuixote.wearWindmill;
+import static top.bearcabbage.duel.Duel.wearNecklace;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements ServerPlayerEntityAccessor {
@@ -30,14 +30,14 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Se
     }
 
     @Inject(method = "onDeath", at = @At("HEAD"))
-    public void donQuixote$onDeath(DamageSource damageSource, CallbackInfo ci) {
+    public void duel$onDeath(DamageSource damageSource, CallbackInfo ci) {
         if (damageSource.getAttacker().isPlayer()) this.oldAttacker = (ServerPlayerEntity) damageSource.getAttacker();
         else this.oldAttacker = null;
     }
 
     @Inject(method = "copyFrom", at = @At("TAIL"))
-    private void donQuixote$copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
-        if(!alive && !this.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY) && !oldPlayer.isSpectator() && wearWindmill(oldPlayer) && wearWindmill(((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker())) {
+    private void duel$copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+        if(!alive && !this.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY) && !oldPlayer.isSpectator() && wearNecklace(oldPlayer) && wearNecklace(((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker())) {
             this.getInventory().clone(oldPlayer.getInventory());
             this.experienceLevel = oldPlayer.experienceLevel;
             this.totalExperience = oldPlayer.totalExperience;

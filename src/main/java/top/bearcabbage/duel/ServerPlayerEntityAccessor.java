@@ -1,4 +1,4 @@
-package top.bearcabbage.donquixote;
+package top.bearcabbage.duel;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "don-quixote:item/windmill"
+    "layer0": "duel:item/necklace"
   }
 }
