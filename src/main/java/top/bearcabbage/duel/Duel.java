@@ -7,6 +7,8 @@ import com.google.gson.JsonParser;
 import dev.emi.trinkets.api.TrinketEnums;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
+import dev.emi.trinkets.api.event.TrinketEquipCallback;
+import dev.emi.trinkets.api.event.TrinketUnequipCallback;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
@@ -20,11 +22,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -51,6 +56,7 @@ public class Duel implements ModInitializer {
 	public static final Item EXHAUSTION = register("exhaustion", new Item(new Item.Settings()));
 	public static int MAX_WAGER;
 	public static Item WAGER = Items.DIAMOND;
+	public static Team DUEL_TEAM;
 
 
 	public static <T extends Item> T register(String path, T item) {
@@ -69,6 +75,20 @@ public class Duel implements ModInitializer {
 			return rule;
 		});
 
+		TrinketEquipCallback.EVENT.register((stack, slot, entity) -> {
+			if (slot.getId().contains("chest/necklace") && checkNecklace(stack) && entity instanceof ServerPlayerEntity player) {
+				if (player.getScoreboardTeam()==null) player.getServerWorld().getScoreboard().addScoreHolderToTeam(player.getNameForScoreboard(), DUEL_TEAM);
+			}
+		});
+
+		TrinketUnequipCallback.EVENT.register((stack, slot, entity) -> {
+			if (slot.getId().contains("chest/necklace") && entity instanceof ServerPlayerEntity player) {
+				if (player.getScoreboardTeam() == DUEL_TEAM) {
+					player.getServerWorld().getScoreboard().removeScoreHolderFromTeam(player.getNameForScoreboard(), DUEL_TEAM);
+				}
+			}
+		});
+
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			// Initialize the bedroom coordinates
 			String wager = config.getOrDefault("wager", "minecraft:diamond");
@@ -78,12 +98,17 @@ public class Duel implements ModInitializer {
 			} catch (Exception e) {
 				LOGGER.error("Failed to load wager item: " + wager + ". Defaulting to diamond.");
 				WAGER = Items.DIAMOND;
-
 			}
+
+			// Initialize the duel team
+			DUEL_TEAM = server.getScoreboard().addTeam("Duel_Duelers");
+			DUEL_TEAM.setShowFriendlyInvisibles(false);
+			DUEL_TEAM.setPrefix(Text.of("§c⚔ "));
+			DUEL_TEAM.setSuffix(Text.of(" §c⚔"));
 		});
 
 		ServerPlayerEvents.AFTER_RESPAWN.register((player, oldPlayer, alive) -> {
-			if (wearNecklace(oldPlayer) && wearNecklace(((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker())) {
+			if (wearNecklace(oldPlayer)) if (wearNecklace(((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker())) {
 				ServerPlayerEntity oldAttacker = ((ServerPlayerEntityAccessor)oldPlayer).getOldAttacker();
 				ServerWorld world = oldAttacker.getServerWorld();
 				player.teleport(world, oldAttacker.getX(), oldAttacker.getY(), oldAttacker.getZ(), oldAttacker.getYaw(), oldAttacker.getPitch());
@@ -109,10 +134,20 @@ public class Duel implements ModInitializer {
 						break;
 					}
 				}
+			} else if (player.getScoreboardTeam() == DUEL_TEAM) {
+				player.getServerWorld().getScoreboard().removeScoreHolderFromTeam(player.getNameForScoreboard(), DUEL_TEAM);
 			}
 		});
 
 		LOGGER.info("To dream the impossible dream, that is my quest.");
+	}
+
+	public static boolean checkNecklace(ItemStack stack) {
+		if (!stack.isOf(NECKLACE)) return false;
+		BundleContentsComponent bundleContentsComponent = stack.get(DataComponentTypes.BUNDLE_CONTENTS);
+		if (bundleContentsComponent == null) return false;
+		BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
+		return builder.removeFirst() instanceof ItemStack itemStack && itemStack.getCount()>0;
 	}
 
 	public static boolean wearNecklace(ServerPlayerEntity player) {

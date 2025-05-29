@@ -32,7 +32,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Se
 
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void duel$onDeath(DamageSource damageSource, CallbackInfo ci) {
-        if (damageSource.getSource()!=null && damageSource.getSource() instanceof ServerPlayerEntity player) this.oldAttacker = player;
+        if (this.getPrimeAdversary()!=null && this.getPrimeAdversary() instanceof ServerPlayerEntity player) this.oldAttacker = player;
         else this.oldAttacker = null;
     }
 

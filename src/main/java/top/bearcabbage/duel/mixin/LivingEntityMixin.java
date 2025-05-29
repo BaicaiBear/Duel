@@ -30,7 +30,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
 	private void drop(ServerWorld world, DamageSource damageSource, CallbackInfo ci) {
 		// Prevent LivingEntity from dropping items
 		LivingEntity entity = (LivingEntity) (Object) this;
-		if (entity instanceof ServerPlayerEntity player && damageSource.getSource() instanceof ServerPlayerEntity attacker && wearNecklace(attacker) && player!=attacker) {
+		if (entity instanceof ServerPlayerEntity player && player.getPrimeAdversary() instanceof ServerPlayerEntity attacker && wearNecklace(attacker) && player!=attacker) {
 			TrinketsApi.getTrinketComponent(player).ifPresent(trinkets -> trinkets.forEach((slot, stack) -> {
 				if (slot.getId().contains("chest/necklace")) {
 					if (stack.isOf(NECKLACE)) {
