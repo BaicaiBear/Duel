@@ -55,8 +55,9 @@ public class Duel implements ModInitializer {
 
 	public static final Item NECKLACE = register("necklace", new NecklaceItem(new Item.Settings().maxCount(1).component(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT)));
 	public static final Item EXHAUSTION = register("exhaustion", new Item(new Item.Settings()));
-	public static int MAX_WAGER;
+	public static int MAX_WAGER = 10;
 	public static Item WAGER = Items.DIAMOND;
+	public static boolean ADVENTURE_MODE = true;
 	public static Team DUEL_TEAM;
 
 
@@ -79,14 +80,14 @@ public class Duel implements ModInitializer {
 		TrinketEquipCallback.EVENT.register((stack, slot, entity) -> {
 			if (slot.getId().contains("chest/necklace") && checkNecklace(stack) && entity instanceof ServerPlayerEntity player) {
 				if (player.getScoreboardTeam()==null) player.getServerWorld().getScoreboard().addScoreHolderToTeam(player.getNameForScoreboard(), DUEL_TEAM);
-				if (!player.isCreative() && !player.isSpectator()) player.changeGameMode(GameMode.ADVENTURE);
+				if ((ADVENTURE_MODE) && !player.isCreative() && !player.isSpectator()) player.changeGameMode(GameMode.ADVENTURE);
 			}
 		});
 
 		TrinketUnequipCallback.EVENT.register((stack, slot, entity) -> {
 			if (slot.getId().contains("chest/necklace") && entity instanceof ServerPlayerEntity player) {
 				if (player.getScoreboardTeam() == DUEL_TEAM) player.getServerWorld().getScoreboard().removeScoreHolderFromTeam(player.getNameForScoreboard(), DUEL_TEAM);
-				if (!player.isCreative() && !player.isSpectator()) player.changeGameMode(GameMode.SURVIVAL);
+				if ((ADVENTURE_MODE) && !player.isCreative() && !player.isSpectator()) player.changeGameMode(GameMode.SURVIVAL);
 
 			}
 		});
@@ -95,6 +96,7 @@ public class Duel implements ModInitializer {
 			// Initialize the bedroom coordinates
 			String wager = config.getOrDefault("wager", "minecraft:diamond");
 			MAX_WAGER = config.getOrDefault("max_wager", 10);
+			ADVENTURE_MODE = config.getOrDefault("adventure_mode", true);
 			try {
 				WAGER = Registries.ITEM.get(Identifier.of(wager.split(":")[0], wager.split(":")[1]));
 			} catch (Exception e) {
@@ -137,7 +139,7 @@ public class Duel implements ModInitializer {
 					}
 				}
 			} else if (player.getScoreboardTeam() == DUEL_TEAM) {
-				if(!player.isCreative() || !player.isSpectator()) player.changeGameMode(GameMode.SURVIVAL);
+				if(ADVENTURE_MODE && (!player.isCreative() || !player.isSpectator())) player.changeGameMode(GameMode.SURVIVAL);
 				player.getServerWorld().getScoreboard().removeScoreHolderFromTeam(player.getNameForScoreboard(), DUEL_TEAM);
 			}
 		});
