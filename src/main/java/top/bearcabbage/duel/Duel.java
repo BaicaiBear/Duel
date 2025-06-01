@@ -105,8 +105,8 @@ public class Duel implements ModInitializer {
 			// Initialize the duel team
 			DUEL_TEAM = server.getScoreboard().addTeam("Duel_Duelers");
 			DUEL_TEAM.setShowFriendlyInvisibles(false);
-			DUEL_TEAM.setPrefix(Text.of("§c⚔ "));
-			DUEL_TEAM.setSuffix(Text.of(" §c⚔"));
+			DUEL_TEAM.setPrefix(Text.of("§c⚔§r "));
+			DUEL_TEAM.setSuffix(Text.of(" §c⚔§r"));
 		});
 
 		ServerPlayerEvents.AFTER_RESPAWN.register((player, oldPlayer, alive) -> {
