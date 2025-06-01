@@ -22,7 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -34,7 +33,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
-import net.minecraft.world.GameRules;
 import net.minecraft.world.event.GameEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +53,8 @@ public class Duel implements ModInitializer {
 
 	public static final Item NECKLACE = register("necklace", new NecklaceItem(new Item.Settings().maxCount(1).component(DataComponentTypes.BUNDLE_CONTENTS, BundleContentsComponent.DEFAULT)));
 	public static final Item EXHAUSTION = register("exhaustion", new Item(new Item.Settings()));
-	public static int MAX_WAGER = 10;
-	public static Item WAGER = Items.DIAMOND;
+	public static int MAX_STAKES = 10;
+	public static Item STAKE = Items.DIAMOND;
 	public static boolean ADVENTURE_MODE = true;
 	public static Team DUEL_TEAM;
 
@@ -94,14 +92,14 @@ public class Duel implements ModInitializer {
 
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			// Initialize the bedroom coordinates
-			String wager = config.getOrDefault("wager", "minecraft:diamond");
-			MAX_WAGER = config.getOrDefault("max_wager", 10);
+			String wager = config.getOrDefault("stake", "minecraft:diamond");
+			MAX_STAKES = config.getOrDefault("max_stakes", 10);
 			ADVENTURE_MODE = config.getOrDefault("adventure_mode", true);
 			try {
-				WAGER = Registries.ITEM.get(Identifier.of(wager.split(":")[0], wager.split(":")[1]));
+				STAKE = Registries.ITEM.get(Identifier.of(wager.split(":")[0], wager.split(":")[1]));
 			} catch (Exception e) {
-				LOGGER.error("Failed to load wager item: " + wager + ". Defaulting to diamond.");
-				WAGER = Items.DIAMOND;
+				LOGGER.error("Failed to load stake item: " + wager + ". Defaulting to diamond.");
+				STAKE = Items.DIAMOND;
 			}
 
 			// Initialize the duel team

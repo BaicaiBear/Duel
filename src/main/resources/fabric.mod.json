@@ -3,15 +3,15 @@
 	"id": "duel",
 	"version": "${version}",
 	"name": "Duel",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Make the duels among players elegant.",
 	"authors": [
 		"Bear Cabbage"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/BaicaiBear/Duel",
+		"sources": "https://github.com/BaicaiBear/Duel"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT License",
 	"icon": "assets/duel/icon.png",
 	"environment": "*",
 	"entrypoints": {

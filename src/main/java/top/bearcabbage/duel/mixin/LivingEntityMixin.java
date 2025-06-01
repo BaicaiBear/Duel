@@ -35,7 +35,7 @@ public abstract class LivingEntityMixin extends Entity implements Attackable {
 				if (slot.getId().contains("chest/necklace")) {
 					if (stack.isOf(NECKLACE)) {
 						if (getAmountFilled(stack) > 0) {
-							int ran = (int) (Math.random()* MAX_WAGER);
+							int ran = (int) (Math.random()* MAX_STAKES);
 							BundleContentsComponent bundleContentsComponent = (BundleContentsComponent)stack.get(DataComponentTypes.BUNDLE_CONTENTS);
 							BundleContentsComponent.Builder builder = new BundleContentsComponent.Builder(bundleContentsComponent);
 							ItemStack itemStack = builder.removeFirst();

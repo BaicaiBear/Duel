@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static top.bearcabbage.duel.Duel.LOGGER;
-import static top.bearcabbage.duel.Duel.WAGER;
+import static top.bearcabbage.duel.Duel.STAKE;
 
 public class NecklaceItem extends BundleItem implements Trinket {
     public NecklaceItem(Settings settings) {
@@ -124,7 +124,7 @@ public class NecklaceItem extends BundleItem implements Trinket {
                         ItemStack itemStack3 = slot.insertStack(itemStack2);
                         builder.add(itemStack3);
                     }
-                } else if (itemStack.isOf(WAGER)) {
+                } else if (itemStack.isOf(STAKE)) {
                     int i = builder.add(slot, player);
                     if (i > 0) {
                         this.playInsertSound(player);
@@ -150,7 +150,7 @@ public class NecklaceItem extends BundleItem implements Trinket {
                         this.playRemoveOneSound(player);
                         cursorStackReference.set(itemStack);
                     }
-                } else if (otherStack.isOf(WAGER)){
+                } else if (otherStack.isOf(STAKE)){
                     int i = builder.add(otherStack);
                     if (i > 0) {
                         this.playInsertSound(player);
