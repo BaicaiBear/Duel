@@ -33,6 +33,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.event.GameEvent;
 import org.slf4j.Logger;
@@ -78,14 +79,15 @@ public class Duel implements ModInitializer {
 		TrinketEquipCallback.EVENT.register((stack, slot, entity) -> {
 			if (slot.getId().contains("chest/necklace") && checkNecklace(stack) && entity instanceof ServerPlayerEntity player) {
 				if (player.getScoreboardTeam()==null) player.getServerWorld().getScoreboard().addScoreHolderToTeam(player.getNameForScoreboard(), DUEL_TEAM);
+				if (!player.isCreative() && !player.isSpectator()) player.changeGameMode(GameMode.ADVENTURE);
 			}
 		});
 
 		TrinketUnequipCallback.EVENT.register((stack, slot, entity) -> {
 			if (slot.getId().contains("chest/necklace") && entity instanceof ServerPlayerEntity player) {
-				if (player.getScoreboardTeam() == DUEL_TEAM) {
-					player.getServerWorld().getScoreboard().removeScoreHolderFromTeam(player.getNameForScoreboard(), DUEL_TEAM);
-				}
+				if (player.getScoreboardTeam() == DUEL_TEAM) player.getServerWorld().getScoreboard().removeScoreHolderFromTeam(player.getNameForScoreboard(), DUEL_TEAM);
+				if (!player.isCreative() && !player.isSpectator()) player.changeGameMode(GameMode.SURVIVAL);
+
 			}
 		});
 
@@ -135,6 +137,7 @@ public class Duel implements ModInitializer {
 					}
 				}
 			} else if (player.getScoreboardTeam() == DUEL_TEAM) {
+				if(!player.isCreative() || !player.isSpectator()) player.changeGameMode(GameMode.SURVIVAL);
 				player.getServerWorld().getScoreboard().removeScoreHolderFromTeam(player.getNameForScoreboard(), DUEL_TEAM);
 			}
 		});
