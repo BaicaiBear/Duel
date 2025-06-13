@@ -2,7 +2,7 @@
 
 _Make the duels among players elegant._
 
-[![Downloads on CurseForge](http://cf.way2muchnoise.eu/full_1278169_downloads.svg)](http://minecraft.curseforge.com/projects/duel) [![Downloads on Modrinth](https://img.shields.io/modrinth/dt/duel-mod?logo=modrinth)](https://modrinth.com/mod/duel-mod)
+[![Downloads on CurseForge](http://cf.way2muchnoise.eu/full_1278169_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/duel) [![Downloads on Modrinth](https://img.shields.io/modrinth/dt/duel-mod?logo=modrinth)](https://modrinth.com/mod/duel-mod)
 
 Supported Languages: English(US), 简体中文
 
